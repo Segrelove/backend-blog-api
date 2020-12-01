@@ -5,7 +5,7 @@ module Api
       before_action :set_article, only: [:show, :edit, :update, :destroy]
       
       def index
-        @articles = current_author.articles.all
+        @articles = Article.all
 
         render json: @articles
       end
@@ -17,11 +17,10 @@ module Api
       #POST /articles/
       def create
         @article = current_author.articles.build(article_params)
-
         if @article.save
           render json: @article, status: :created
         else
-          render json: @article.errors.messages.join(' '), status: :unprocessable_entity
+          render json: @article.errors.full_messages.join(' '), status: :unprocessable_entity
         end
       end
 
@@ -40,7 +39,7 @@ module Api
       private
 
       def set_article
-        @article = current_author.records.find(params[:id])
+        @article = current_author.articles.find(params[:id])
       end
 
       def article_params
